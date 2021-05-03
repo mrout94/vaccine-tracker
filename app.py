@@ -145,7 +145,11 @@ try:
     st.table(vax_df)
     
     # Support Me
+    st.sidebar.markdown('**Collborate:-**')
     st.sidebar.markdown('Source: [Github](https://github.com/mrout94/vaccine-tracker) :star:')
+    st.sidebar.markdown('Connect: [LinkedIn](https://www.linkedin.com/in/manabendrarout/) :handshake:')
+    st.sidebar.markdown('Data Science: [Kaggle](https://www.kaggle.com/manabendrarout) :duck:')
+    st.sidebar.markdown('*Created By:- Manabendra Rout*')
 
 except URLError as e:
     st.error(
@@ -159,4 +163,3 @@ except URLError as e:
 
 progress_bar.empty()
 progress_message.empty()
-# st.button("Re-run")
