@@ -143,6 +143,9 @@ try:
     st.plotly_chart(fig, use_container_width=True)
     st.markdown('## Raw Data')
     st.table(vax_df)
+    
+    # Support Me
+    st.sidebar.markdown('Source: [Github](https://github.com/mrout94/vaccine-tracker) :star:')
 
 except URLError as e:
     st.error(
