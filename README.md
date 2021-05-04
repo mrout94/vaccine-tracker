@@ -1,6 +1,6 @@
 # India Vaccine Tracker
 
-Link to the website:- [Vaccine Tracker](www.google.com)
+Link to the website:- [Vaccine Tracker](https://vaccine-tracker-india.herokuapp.com/)
 
 On 16th January 2021, PM Narendra Modi on behalf of the government of India declared the vaccination open for citizens of India (starting with the high-risk category of senior citizens). The official portal for registering for vaccination and booking appointments is [CoWin](https://www.cowin.gov.in/home). This portal requires Mobile number and basic identity verification for registering yourself for vaccination and has a OTP authentication system for further logins.
 
