@@ -9,7 +9,7 @@ But as I and many people I know faced some challenges while logging into the por
 You can use this tool to know about any available slots for the selected area, copy the pin code and paste the same in t5he Cowin portal for fast and easy finding of vaccination centres.
 
 Hope this helps!  
-**We will find a way, we always have!** - *Interstellar(2014)*  
+**We will find a way, we always have!** - *Interstellar (2014)*  
 
 Together we Indians can achieve great things and this situation calls for nothing less than our best. Let's fight this pandemic and eliminate it from the face of the earth.
 
