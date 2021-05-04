@@ -8,6 +8,12 @@ But as I and many people I know faced some challenges while logging into the por
 
 You can use this tool to know about any available slots for the selected area, copy the pin code and paste the same in t5he Cowin portal for fast and easy finding of vaccination centres.
 
+The GUI looks something like this:-  
+
+![GUI Demo](https://github.com/mrout94/vaccine-tracker/blob/main/images/app_demo.png "Front End")
+
+It is very intuitive to use and does not require any sort of expertise to operate.
+
 Hope this helps!  
 **We will find a way, we always have!** - *Interstellar (2014)*  
 
