@@ -1,5 +1,6 @@
-from datetime import datetime
+import datetime
 from urllib.error import URLError
+from fake_useragent import UserAgent
 import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
@@ -73,10 +74,19 @@ def get_Vax_Data(state, district, age):
     path = './Data/State_And_Disctrict_Names.csv'
     df = pd.read_csv(path)
     DIST_ID = df[(df['district_name'] == district) & (df['state_name'] == state)]['district_id'].values[0]
-    START_DATE = datetime.today().strftime('%d-%m-%Y')
-    VAX_DATA_PORTAL = f'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id={DIST_ID}&date={START_DATE}'
-    res = requests.get(VAX_DATA_PORTAL)
-    vax_info_df = pd.DataFrame(json.loads(res.text)["centers"])
+    vax_info_df = None
+    #Get data for 3 weeks
+    for i in range(3):
+        START_DATE = (datetime.datetime.today() + datetime.timedelta(days=i*7)).strftime('%d-%m-%Y')
+        VAX_DATA_PORTAL = f'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id={DIST_ID}&date={START_DATE}'
+        ua = UserAgent()
+        headers = {'User-Agent':ua.random}
+        res = requests.get(VAX_DATA_PORTAL, headers=headers)
+        if i == 0:
+            vax_info_df = pd.DataFrame(json.loads(res.text)["centers"])
+        else:
+            vax_info_df = vax_info_df.append(pd.DataFrame(json.loads(res.text)["centers"]))
+    
     vax_info_df["from"] = pd.to_datetime(vax_info_df["from"]).dt.strftime('%H:%M')
     vax_info_df["to"] = pd.to_datetime(vax_info_df["to"]).dt.strftime('%H:%M')
     vax_info_df["Timing"] = vax_info_df["from"] + " - " + vax_info_df["to"]
@@ -87,8 +97,7 @@ def get_Vax_Data(state, district, age):
     vax_info_all_sessions_df['Min_Age'] = vax_info_all_sessions_df.sessions.apply(lambda x: x['min_age_limit'])
     vax_info_all_sessions_df['Doses_Available'] = vax_info_all_sessions_df.sessions.apply(lambda x: x['available_capacity'])
     vax_info_all_sessions_df['Vaccine'] = vax_info_all_sessions_df.sessions.apply(lambda x: x['vaccine']).fillna('UNKNOWN')
-    # vax_info_all_sessions_df['Date'] =  pd.to_datetime(vax_info_all_sessions_df.sessions.apply(lambda x: x['date'])).dt.strftime('%d-%m-%Y')
-    vax_info_all_sessions_df['Date'] =  vax_info_all_sessions_df.sessions.apply(lambda x: x['date'])
+    vax_info_all_sessions_df['Date'] =  pd.to_datetime(vax_info_all_sessions_df.sessions.apply(lambda x: x['date']), dayfirst=True).dt.strftime('%d-%m-%Y')
     
     vax_info_all_sessions_df = vax_info_all_sessions_df[vax_info_all_sessions_df['Min_Age'] == age]
     return vax_info_all_sessions_df, pincode_list
@@ -139,6 +148,7 @@ if __name__ == '__main__':
         vax_df.rename(columns={'name':'Name', 'state_name':'State', 'district_name':'District', 'pincode':'Pincode', 'from':'From',
                                'to': 'To', 'fee_type': 'Free/Paid', 'Min_Age':'Min Age', 'Doses_Available':'Available Doses',
                                'Vaccine':'Vaccine', 'Date':'Date'}, inplace=True)
+        # vax_df = vax_df.sort_values('Date').reset_index(drop=True)
         
         st.markdown(f'## Availability in {district} ({state})')
         st.plotly_chart(fig, use_container_width=True)
@@ -152,7 +162,6 @@ if __name__ == '__main__':
         st.sidebar.markdown('**Collaborate:-**')
         st.sidebar.markdown('Source: [Github](https://github.com/mrout94/vaccine-tracker) :star:')
         st.sidebar.markdown('Connect: [LinkedIn](https://www.linkedin.com/in/manabendrarout/) :handshake:')
-        # st.sidebar.markdown('Data Science: [Kaggle](https://www.kaggle.com/manabendrarout) :duck:')
         st.sidebar.markdown('*Created By:- Manabendra Rout*')
     
     except URLError as e:
@@ -164,6 +173,8 @@ if __name__ == '__main__':
         """
             % e.reason
         )
+    except:
+        st.error('Unable to fetch data from server. Please try after some time!')
     
     progress_bar.empty()
     progress_message.empty()
